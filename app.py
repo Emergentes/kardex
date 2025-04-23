@@ -39,5 +39,21 @@ def personal():
     personal = cursor.fetchall()
     return render_template("personal.html",personal = personal)
 
+@app.route("/personal/nuevo",methods=['GET','POST'])
+def nuevo_personal():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        telefono = request.form['telefono']
+        fecha_nac = request.form['fecha_nac']
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("INSERT INTO personal (nombre,telefono,fecha_nac) values (?,?,?)",(nombre,telefono,fecha_nac))
+        
+        conn.commit()
+        conn.close()
+        return redirect(url_for('personal'))
+    return render_template('form_personal.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
